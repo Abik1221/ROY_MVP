@@ -1,0 +1,22 @@
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./.env:/tmp/.env
+      - ./workflows:/data
+    environment:
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - WEBHOOK_URL=${N8N_BASE_URL}
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=true
+    command: >
+      sh -c "source /tmp/.env && n8n start"
+
+  review-ui:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src/review-ui:/usr/share/nginx/html
